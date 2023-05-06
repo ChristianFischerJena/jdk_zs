@@ -224,19 +224,19 @@ public abstract class MacBaseInstallerBundler extends AbstractBundler {
             ProcessBuilder pb = new ProcessBuilder(searchOptions);
 
             IOUtils.exec(pb, false, ps);
-            Pattern p = Pattern.compile("\"alis\"<blob>=\"([^\"]+)\"");
+            Pattern p = Pattern.compile("\"alis\"<blob>=(0x[0-9A-F ]+)?\"([^\"]+)\"");
             Matcher m = p.matcher(baos.toString());
             if (!m.find()) {
                 Log.error(MessageFormat.format(I18N.getString(
                         "error.cert.not.found"), key, keychainName));
                 return null;
             }
-            String matchedKey = m.group(1);
+            String matchedKey = m.group(2);
             if (m.find()) {
                 Log.error(MessageFormat.format(I18N.getString(
                         "error.multiple.certs.found"), key, keychainName));
             }
-            return matchedKey;
+            return key;
         } catch (IOException ioe) {
             Log.verbose(ioe);
             return null;
